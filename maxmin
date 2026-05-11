@@ -1,0 +1,49 @@
+ORG 0000H 
+MOV R0, #30H     ; Starting address of array 
+MOV R2, #08H     ; Number of elements 
+MOV A, @R0       ; Load first element as initial maximum 
+INC R0 
+ 
+LOOP: 
+MOV B, @R0       ; Load next element 
+CJNE A, B, CHECK ; Compare A and B 
+SJMP NEXT 
+ 
+CHECK: 
+JC UPDATE        ; If B > A, update maximum 
+SJMP NEXT 
+ 
+UPDATE: 
+MOV A, B         ; Store new maximum in A 
+ 
+NEXT: 
+INC R0           ; Move to next memory location 
+DJNZ R2, LOOP    ; Repeat until all elements checked 
+ 
+MOV 40H, A       ; Store maximum value at 40H 
+END 
+ORG 0000H 
+ 
+MOV R0, #30H     ; Starting address of array 
+MOV R2, #08H     ; Number of elements 
+MOV A, @R0       ; Load first element as initial minimum 
+INC R0 
+ 
+LOOP: 
+MOV B, @R0       ; Load next element 
+CJNE A, B, CHECK ; Compare A and B 
+SJMP NEXT 
+ 
+CHECK: 
+JNC UPDATE       ; If A > B, update minimum 
+SJMP NEXT 
+ 
+UPDATE: 
+MOV A, B         ; Store new minimum in A 
+ 
+NEXT: 
+INC R0           ; Move to next element 
+DJNZ R2, LOOP    ; Repeat for all elements 
+ 
+MOV 40H, A       ; Store minimum value in memory location 40H 
+END 
