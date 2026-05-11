@@ -1,0 +1,63 @@
+ORG 0000H 
+ 
+MOV R2, #07H      ; Outer loop (n-1 passes for 8 numbers) 
+ 
+BACK: 
+MOV R0, #30H      ; Starting address of array 
+MOV R3, #07H      ; Inner loop 
+ 
+LOOP: 
+MOV A, @R0        ; Load first number 
+MOV B, A 
+INC R0 
+MOV A, @R0        ; Load next number 
+ 
+CJNE A, B, CHECK 
+SJMP NEXT 
+ 
+CHECK: 
+JC SWAP           ; If first > second, swap 
+SJMP NEXT 
+ 
+SWAP: 
+MOV @R0, B 
+DEC R0 
+MOV @R0, A 
+INC R0 
+ 
+NEXT: 
+DJNZ R3, LOOP 
+DJNZ R2, BACK 
+END
+
+ORG 0000H 
+ 
+MOV R2, #07H      ; Outer loop for 8 elements 
+ 
+BACK: 
+MOV R0, #30H      ; Starting address of array 
+MOV R3, #07H      ; Inner loop 
+ 
+LOOP: 
+MOV A, @R0        ; Load first number 
+MOV B, A 
+INC R0 
+MOV A, @R0        ; Load second number 
+ 
+CJNE A, B, CHECK 
+SJMP NEXT 
+ 
+CHECK: 
+JNC SWAP          ; If second < first, swap for descending 
+SJMP NEXT 
+ 
+SWAP: 
+MOV @R0, B 
+DEC R0 
+MOV @R0, A 
+INC R0 
+ 
+NEXT: 
+DJNZ R3, LOOP 
+DJNZ R2, BACK 
+END 
