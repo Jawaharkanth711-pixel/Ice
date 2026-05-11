@@ -1,0 +1,47 @@
+ORG 0000H 
+ 
+START: 
+MOV P1, #00H      ; Turn ON all LEDs 
+ACALL DELAY 
+ 
+MOV P1, #0FFH     ; Turn OFF all LEDs 
+ACALL DELAY 
+ 
+SJMP START        ; Repeat continuously 
+ 
+DELAY: 
+MOV R2, #200 
+D1: MOV R1, #200 
+D2: DJNZ R1, D2 
+DJNZ R2, D1 
+RET 
+END
+
+ORG 0000H 
+MOV R0, #30H     ; Starting memory address of data 
+MOV R2, #08H     ; Number of data values 
+MOV A, #00H      ; Clear accumulator 
+ 
+LOOP: 
+ADD A, @R0       ; Add data to accumulator 
+INC R0           ; Move to next memory location 
+DJNZ R2, LOOP    ; Repeat for 8 values 
+ 
+MOV B, #08H      ; Divisor 
+DIV AB           ; A = average 
+MOV 40H, A       ; Store average at memory location 40H 
+END
+
+ORG 0000H 
+MOV R0, #30H     ; Source memory address 
+MOV R1, #40H     ; Destination memory address 
+MOV R2, #05H     ; Number of bytes to transfer 
+ 
+LOOP: 
+MOV A, @R0       ; Load data from source 
+MOV @R1, A       ; Store data to destination 
+ 
+INC R0           ; Move to next source location 
+INC R1           ; Move to next destination location 
+DJNZ R2, LOOP    ; Repeat until all bytes moved 
+END 
